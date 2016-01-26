@@ -1,0 +1,5 @@
+suites:
+    default:
+        psr4_prefix: Predmond\HtmlToAmp
+        src_path: src
+        spec_path: spec

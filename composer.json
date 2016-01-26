@@ -1,0 +1,20 @@
+{
+    "name": "paulredmond/html-to-amp",
+    "description": "A PHP Library to Convert HTML to AMP HTML",
+    "require": {},
+    "require-dev": {
+        "phpspec/phpspec": "^2.4"
+    },
+    "autoload": {
+        "psr-0": {
+            "Predmond\\HtmlToAmp\\": "src/"
+        }
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Paul Redmond",
+            "email": "paulrredmond@gmail.com"
+        }
+    ]
+}
