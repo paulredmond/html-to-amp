@@ -5,7 +5,9 @@ namespace Predmond\HtmlToAmp\Converter;
 use Predmond\HtmlToAmp\ElementInterface;
 
 /**
- * Converts prohibited HTML tags to null
+ * Removes Tags Prohibited in AMP HTML
+ *
+ * @see https://www.ampproject.org/docs/reference/spec.html
  *
  * @package Predmond\HtmlToAmp\Converter
  */
