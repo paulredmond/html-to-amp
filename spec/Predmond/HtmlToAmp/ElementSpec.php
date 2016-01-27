@@ -73,11 +73,6 @@ class ElementSpec extends ObjectBehavior
         $this->getAttributes()->shouldReturn([]);
     }
 
-//    public function it_returns_empty_attributes_when_not_a_dom_element()
-//    {
-//
-//    }
-
     /** @test **/
     public function it_confirms_child_nodes()
     {
@@ -98,5 +93,19 @@ class ElementSpec extends ObjectBehavior
         $this->beConstructedWith($node);
 
         $this->hasChildren()->shouldReturn(false);
+    }
+
+    /** @test **/
+    public function it_can_remove_itself_from_the_document()
+    {
+        $document   = new DOMDocument('1.0', 'utf-8');
+        $parentNode = $document->createElement('div');
+        $node       = $document->createElement('p', 'Hello World');
+
+        $parentNode->appendChild($node);
+        $document->appendChild($parentNode);
+
+        $this->beConstructedWith($node);
+        $this->remove()->shouldReturn($node);
     }
 }

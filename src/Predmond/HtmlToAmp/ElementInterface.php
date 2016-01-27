@@ -28,4 +28,21 @@ interface ElementInterface
      * @return array
      */
     public function getAttributes();
+
+    /**
+     * Remove this element from the DOMDocument
+     *
+     * @return mixed
+     */
+    public function remove();
+
+    /**
+     * @return bool
+     */
+    public function hasChildren();
+
+    /**
+     * @return ElementInterface[]
+     */
+    public function getChildren();
 }

@@ -52,8 +52,60 @@ class Element implements ElementInterface
         return $data;
     }
 
+    /**
+     * @return bool
+     */
     public function hasChildren()
     {
         return $this->node->hasChildNodes();
+    }
+
+    public function createWritableElement($elementName, array $attributes = [])
+    {
+        $element = $this->node->ownerDocument->createElement($elementName);
+
+        if ($element instanceof \DOMElement) {
+            foreach ($attributes as $attribute => $value) {
+                $element->setAttribute($attribute, $value);
+            }
+        }
+
+        return $element;
+    }
+
+    /**
+     * Replace current element with a new DOMNode
+     *
+     * @param $node
+     * @return DOMNode
+     */
+    public function replaceWith($node)
+    {
+        return $this->node->parentNode->replaceChild($node,
+            $this->node);
+    }
+
+    public function remove()
+    {
+        if ($this->node->parentNode) {
+            return $this->node->parentNode->removeChild($this->node);
+        }
+
+        return false;
+    }
+
+    /**
+     * @return ElementInterface[]
+     */
+    public function getChildren()
+    {
+        $children = [];
+
+        /** @var \DOMNode $node */
+        foreach ($this->node->childNodes as $node) {
+            $children[] = new static($node);
+        }
+
+        return $children;
     }
 }

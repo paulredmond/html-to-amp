@@ -6,7 +6,9 @@ use Predmond\HtmlToAmp\ElementInterface;
 
 class ImageConverter implements ConverterInterface
 {
-    private $validAttributes = ['src', 'srcset', 'alt', 'attribution'];
+    private $validAttributes = [
+        'src', 'width', 'height', 'srcset', 'alt', 'attribution'
+    ];
 
     /**
      * @param ElementInterface $element
@@ -15,21 +17,18 @@ class ImageConverter implements ConverterInterface
      */
     public function convert(ElementInterface $element)
     {
-        $attributes = $this->attributesToString($element);
+        $ampImg = $element->createWritableElement('amp-img');
+        $ampImg->setAttribute('src', $element->getAttribute('src'));
 
-        if (!empty($attributes)) {
-            $attributes = ' ' . $attributes;
-        }
-
-        return sprintf('<amp-img%s></amp-img>', $attributes);
+        return $element->replaceWith($ampImg);
     }
 
     /**
-     * @return string[]
+     * @return array
      */
     public function getSupportedTags()
     {
-//        return ['img'];
+        return ['img'];
     }
 
     private function attributesToString(ElementInterface $element)

@@ -26,4 +26,28 @@ class ImageConverterSpec extends ObjectBehavior
             ->convert(new Element($node))
             ->shouldReturn('<amp-img src="foo.jpg"></amp-img>');
     }
+
+    /** @test **/
+    public function it_ignores_invalid_amp_attributes()
+    {
+        /** @var \DOMElement $node */
+        $node = (new \DOMDocument('1.0', 'utf-8'))
+            ->createElement('img');
+
+        $node->setAttribute('src', 'foo.jpg');
+        $node->setAttribute('width', '300');
+        $node->setAttribute('height', '300');
+        $node->setAttribute('align', 'top');
+        $this
+            ->convert(new Element($node))
+            ->shouldReturn(
+                '<amp-img src="foo.jpg" width="300" height="300"></amp-img>'
+            );
+    }
+
+    /** @test **/
+    public function it_has_supported_tags()
+    {
+        $this->getSupportedTags()->shouldReturn(['img']);
+    }
 }
