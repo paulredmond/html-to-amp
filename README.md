@@ -9,17 +9,18 @@ I have a need to convert HTML content into valid AMP (a subset of HTML) format f
 
 The library's **main purpose is parsing fragments of HTML content (an article body)** and converting it into valid AMP. At this point you could try to parse an entire HTML document, but that's not this library's sweet spot. Pull requests are welcomed of course if you find a need; [open an issue](https://github.com/paulredmond/html-to-amp/issues) and discuss your ideas before submitting a PR so I can understand your goals/needs and align them to this project.
  
- ### Design Goals
+### Design Goals
  
  * Make it simple, yet extensible
  * Convert and Replace Elements in a passive way
- * Allow client code to configure the conversions
+ * Allow client code to configure which conversions run
+ * Allow client code to add custom conversions as needed
  
- ### Inspiration
+### Inspiration
  
  This Library was inspired by code design patterns found in the wonderful [thephpleague/html-to-markdown](https://github.com/thephpleague/html-to-markdown) PHP library. Generally, the objectives in this Library are similiar: parse HTML into another format&mdash;in this case a subset of HTML.
  
- ### Testing
+### Testing
  
  ```
  $ vendor/bin/phpspec run
