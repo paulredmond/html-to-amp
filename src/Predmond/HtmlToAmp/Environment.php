@@ -32,7 +32,7 @@ class Environment
         }
 
         if ($converter instanceof NullConverter) {
-            $this->converters['default'] = $converter;
+            $this->converters[self::DEFAULT_CONVERTER] = $converter;
         }
 
         return $this;
