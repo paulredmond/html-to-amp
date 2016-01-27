@@ -23,7 +23,7 @@ class ProhibitedConverter implements ConverterInterface
     {
         if (
             $element->getTagName() === 'meta'
-            && empty($element->getAttribute('http-equiv'))
+            && $element->getAttribute('http-equiv') === ''
         ) {
             return $element;
         }
