@@ -1,0 +1,7 @@
+suites:
+    default:
+        namespace: Predmond\HtmlToAmp
+        psr4_prefix: Predmond\HtmlToAmp
+extensions:
+    - PhpSpec\NyanFormattersExtension\Extension
+formatter.name: nyan.cat
