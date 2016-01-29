@@ -8,9 +8,13 @@ class AmpConverter
 {
     protected $environment;
 
-    public function __construct()
+    public function __construct(Environment $env = null)
     {
-        $this->environment = Environment::createDefaultEnvironment();
+        $this->environment = $env;
+
+        if ($this->environment === null) {
+            $this->environment = Environment::createDefaultEnvironment();
+        }
     }
 
     public function convert($html)

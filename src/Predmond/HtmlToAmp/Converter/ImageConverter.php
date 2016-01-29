@@ -19,6 +19,8 @@ class ImageConverter implements ConverterInterface
     {
         $ampImg = $element->createWritableElement('amp-img');
         $ampImg->setAttribute('src', $element->getAttribute('src'));
+        $ampImg->setAttribute('width', $element->getAttribute('width'));
+        $ampImg->setAttribute('height', $element->getAttribute('height'));
 
         return $element->replaceWith($ampImg);
     }
