@@ -99,6 +99,7 @@ class AmpConverter
             'form',
             'input',
             'textarea',
+            'script',
             'select',
             'option',
             'meta'

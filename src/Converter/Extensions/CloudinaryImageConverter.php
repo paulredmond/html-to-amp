@@ -74,7 +74,7 @@ class CloudinaryImageConverter implements ConverterInterface
     {
         return implode(', ', [
             cloudinary_url($src, [
-                'width' => 700,
+                'width' => 620,
                 'crop' => 'limit',
                 'sign_url' => true,
                 'type' => 'fetch',
