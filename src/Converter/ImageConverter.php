@@ -2,6 +2,7 @@
 
 namespace Predmond\HtmlToAmp\Converter;
 
+use League\Event\EventInterface;
 use Predmond\HtmlToAmp\ElementInterface;
 
 class ImageConverter implements ConverterInterface
@@ -25,34 +26,43 @@ class ImageConverter implements ConverterInterface
         return $element->replaceWith($ampImg);
     }
 
-    /**
-     * @return array
-     */
-    public function getSupportedTags()
+    public function handleTagImg(EventInterface $event, ElementInterface $element)
     {
-        return ['img'];
+        $ampImg = $element->createWritableElement('amp-img');
+        $ampImg->setAttribute('src', $element->getAttribute('src'));
+        $ampImg->setAttribute('width', $element->getAttribute('width'));
+        $ampImg->setAttribute('height', $element->getAttribute('height'));
+
+        return $element->replaceWith($ampImg);
     }
 
-    private function attributesToString(ElementInterface $element)
+    public function getSubscribedEvents()
     {
-        $nodeAttributes = $element->getAttributes();
-        $validAttributes = array_intersect_key(
-            array_flip($this->validAttributes),
-            $element->getAttributes()
-        );
-
-        $validAttributes = array_keys($validAttributes);
-
-        if (empty($validAttributes)) {
-            return '';
-        }
-
-        $out = array_map(function ($value, $property) use ($validAttributes) {
-            if (in_array($property, $validAttributes)) {
-                return sprintf('%s="%s"', $property, $value);
-            }
-        }, array_values($nodeAttributes), array_keys($nodeAttributes));
-
-        return trim(implode(' ', $out));
+        return [
+            'img' => ['handleTagImg']
+        ];
     }
+
+//    private function attributesToString(ElementInterface $element)
+//    {
+//        $nodeAttributes = $element->getAttributes();
+//        $validAttributes = array_intersect_key(
+//            array_flip($this->validAttributes),
+//            $element->getAttributes()
+//        );
+//
+//        $validAttributes = array_keys($validAttributes);
+//
+//        if (empty($validAttributes)) {
+//            return '';
+//        }
+//
+//        $out = array_map(function ($value, $property) use ($validAttributes) {
+//            if (in_array($property, $validAttributes)) {
+//                return sprintf('%s="%s"', $property, $value);
+//            }
+//        }, array_values($nodeAttributes), array_keys($nodeAttributes));
+//
+//        return trim(implode(' ', $out));
+//    }
 }

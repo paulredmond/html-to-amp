@@ -2,6 +2,8 @@
 
 namespace Predmond\HtmlToAmp;
 
+use League\Event\Emitter;
+use League\Event\EmitterInterface;
 use Predmond\HtmlToAmp\Converter\ConverterInterface;
 use Predmond\HtmlToAmp\Converter\ImageConverter;
 use Predmond\HtmlToAmp\Converter\NullConverter;
@@ -9,41 +11,57 @@ use Predmond\HtmlToAmp\Converter\ProhibitedConverter;
 
 class Environment
 {
-    const DEFAULT_CONVERTER = 'default';
+    /**
+     * @var EmitterInterface
+     */
+    private $eventEmitter;
 
-    protected $converters = [];
+    public function __construct(EmitterInterface $eventEmitter = null)
+    {
+        $this->eventEmitter = $eventEmitter;
+
+        if ($this->eventEmitter === null) {
+            $this->eventEmitter = new Emitter();
+        }
+    }
 
     public static function createDefaultEnvironment()
     {
         $env = new static();
-
-        $env
-            ->addConverter(new NullConverter())
-            ->addConverter(new ImageConverter())
-            ->addConverter(new ProhibitedConverter());
+        $env->addConverter(new ImageConverter());
 
         return $env;
     }
 
     public function addConverter(ConverterInterface $converter)
     {
-        foreach ($converter->getSupportedTags() as $tag) {
-            $this->converters[$tag] = $converter;
-        }
+        foreach ($converter->getSubscribedEvents() as $tag => $event) {
+            $eventName = stripos($tag, 'convert.') === 0 ?
+                $tag : "convert.{$tag}";
 
-        if ($converter instanceof NullConverter) {
-            $this->converters[self::DEFAULT_CONVERTER] = $converter;
+            if (is_string($event)) {
+                $event = [$event];
+            }
+
+            $event = array_values($event);
+            list($callbackName, $priority) = count($event) > 1 ?
+                [$event[0], $event[1]] : [$event[0], EmitterInterface::P_NORMAL];
+
+            $this->eventEmitter->addListener(
+                $eventName,
+                [$converter, $callbackName],
+                $priority
+            );
         }
 
         return $this;
     }
 
-    public function getConverterByTag($tag)
+    /**
+     * @return Emitter|EmitterInterface
+     */
+    public function getEventEmitter()
     {
-        if (isset($this->converters[$tag])) {
-            return $this->converters[$tag];
-        }
-
-        return $this->converters[self::DEFAULT_CONVERTER];
+        return $this->eventEmitter;
     }
 }

@@ -77,12 +77,16 @@ class Element implements ElementInterface
      * Replace current element with a new DOMNode
      *
      * @param $node
-     * @return DOMNode
+     * @return DOMNode|bool
      */
     public function replaceWith($node)
     {
-        return $this->node->parentNode->replaceChild($node,
-            $this->node);
+        if ($this->node->parentNode !== null) {
+            return $this->node->parentNode->replaceChild($node,
+                $this->node);
+        }
+
+        return false;
     }
 
     public function remove()

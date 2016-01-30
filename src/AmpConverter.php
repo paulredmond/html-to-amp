@@ -31,6 +31,7 @@ class AmpConverter
 
         $root = new Element($root);
         $this->convertChildren($root);
+        $this->removeProhibited($document);
 
         $ampHtml = $this->sanitize($document->saveHTML());
 
@@ -70,9 +71,8 @@ class AmpConverter
         $tag = $element->getTagName();
 
         /** @var ConverterInterface $converter */
-        $converter = $this->environment->getConverterByTag($tag);
-
-        return $converter->convert($element);
+        $event = $this->environment->getEventEmitter()
+            ->emit("convert.{$tag}", $element, $tag);
     }
 
     private function sanitize($html)
@@ -83,5 +83,34 @@ class AmpConverter
         $html = trim($html, "\n\r\0\x0B");
 
         return $html;
+    }
+
+    private function removeProhibited(\DOMDocument $document)
+    {
+        // TODO: Config-based
+        $xpath = '//' . implode('|//', [
+            'base',
+            'frame',
+            'frameset',
+            'object',
+            'param',
+            'applet',
+            'embed',
+            'form',
+            'input',
+            'textarea',
+            'select',
+            'option',
+            'meta'
+        ]);
+
+        $elements = (new \DOMXPath($document))->query($xpath);
+
+        /** @var \DOMElement $element */
+        foreach ($elements as $element) {
+            if ($element->parentNode !== null) {
+                $element->parentNode->removeChild($element);
+            }
+        }
     }
 }
