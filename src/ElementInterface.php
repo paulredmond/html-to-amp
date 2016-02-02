@@ -4,6 +4,8 @@ namespace Predmond\HtmlToAmp;
 
 interface ElementInterface
 {
+    public function getNode();
+
     /**
      * @return string
      */
@@ -23,6 +25,15 @@ interface ElementInterface
     public function getAttribute($attributeName);
 
     /**
+     * Set an attribute
+     *
+     * @param $attributeName
+     * @param $attributeValue
+     * @return null
+     */
+    public function setAttribute($attributeName, $attributeValue);
+
+    /**
      * Get all node attributes
      *
      * @return array
@@ -37,6 +48,11 @@ interface ElementInterface
     public function remove();
 
     /**
+     * @return ElementInterface|null
+     */
+    public function getParent();
+
+    /**
      * @return bool
      */
     public function hasChildren();
@@ -45,4 +61,15 @@ interface ElementInterface
      * @return ElementInterface[]
      */
     public function getChildren();
+
+    /**
+     * Create a DOMNode Instance from the DOMDocument
+     *
+     * @param  string $elementName the name of the node
+     * @param  array  $attributes  optional node attributes
+     * @return \DOMElement
+     */
+    public function createWritableElement($elementName, array $attributes = []);
+
+    public function replaceWith(ElementInterface $element);
 }

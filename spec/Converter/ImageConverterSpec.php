@@ -5,50 +5,50 @@ namespace spec\Predmond\HtmlToAmp\Converter;
 use PhpSpec\ObjectBehavior;
 use Prophecy\Argument;
 use Predmond\HtmlToAmp\Element;
+use League\Event\EventInterface;
+use Predmond\HtmlToAmp\ElementInterface;
 
 class ImageConverterSpec extends ObjectBehavior
 {
     function it_is_initializable()
     {
         $this->shouldHaveType('Predmond\HtmlToAmp\Converter\ImageConverter');
+        $this->shouldHaveType('Predmond\HtmlToAmp\Converter\ConverterInterface');
     }
 
-    public function it_converts_an_image_to_amp_img()
-    {
-        // TODO: Fix this test
-//        /** @var \DOMElement $node */
-//        $node = (new \DOMDocument('1.0', 'utf-8'))
-//            ->createElement('img');
-//
-//        $node->setAttribute('src', 'foo.jpg');
-//
-//        $this
-//            ->convert(new Element($node))
-//            ->shouldReturn('<amp-img src="foo.jpg"></amp-img>');
-    }
+    public function it_converts_an_image_to_amp_img(
+        ElementInterface $ampImg,
+        EventInterface $event,
+        ElementInterface $element
+    ) {
+        $ampImg->setAttribute('src', 'foo.jpg')->shouldBeCalled();
+        $ampImg->setAttribute('width', 300)->shouldBeCalled();
+        $ampImg->setAttribute('height', 250)->shouldBeCalled();
+        $ampImg->setAttribute('srcset', '')->shouldBeCalled();
+        $ampImg->setAttribute('alt', '')->shouldBeCalled();
+        $ampImg->setAttribute('attribution', '')->shouldBeCalled();
 
-    /** @test **/
-    public function it_ignores_invalid_amp_attributes()
-    {
-        // TODO: Fix this test
-//        /** @var \DOMElement $node */
-//        $node = (new \DOMDocument('1.0', 'utf-8'))
-//            ->createElement('img');
-//
-//        $node->setAttribute('src', 'foo.jpg');
-//        $node->setAttribute('width', '300');
-//        $node->setAttribute('height', '300');
-//        $node->setAttribute('align', 'top');
-//        $this
-//            ->convert(new Element($node))
-//            ->shouldReturn(
-//                '<amp-img src="foo.jpg" width="300" height="300"></amp-img>'
-//            );
+        $element->getAttribute('src')->shouldBeCalled()->willReturn('foo.jpg');
+        $element->getAttribute('width')->shouldBeCalled()->willReturn(300);
+        $element->getAttribute('height')->shouldBeCalled()->willReturn(250);
+        $element->getAttribute('srcset')->shouldBeCalled()->willReturn('');
+        $element->getAttribute('alt')->shouldBeCalled()->willReturn('');
+        $element->getAttribute('attribution')->shouldBeCalled()->willReturn('');
+
+        $element
+            ->createWritableElement('amp-img')
+            ->willReturn($ampImg);
+
+        $element->replaceWith($ampImg)->shouldBeCalled();
+
+        $this->handleTagImg($event, $element);
     }
 
     /** @test **/
-    public function it_has_supported_tags()
+    public function it_has_subscribed_events()
     {
-        $this->getSupportedTags()->shouldReturn(['img']);
+        $this->getSubscribedEvents()->shouldReturn([
+            'img' => ['handleTagImg']
+        ]);
     }
 }

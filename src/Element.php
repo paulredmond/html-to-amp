@@ -17,6 +17,11 @@ class Element implements ElementInterface
         $this->node = $node;
     }
 
+    public function getNode()
+    {
+        return $this->node;
+    }
+
     public function getTagName()
     {
         return $this->node->nodeName;
@@ -36,6 +41,13 @@ class Element implements ElementInterface
         return '';
     }
 
+    public function setAttribute($attributeName, $attributeValue)
+    {
+        if ($this->node instanceof DOMElement) {
+            $this->node->setAttribute($attributeName, $attributeValue);
+        }
+    }
+
     public function getAttributes()
     {
         $data = [];
@@ -50,6 +62,14 @@ class Element implements ElementInterface
         }
 
         return $data;
+    }
+
+    /**
+     * @return ElementInterface|null
+     */
+    public function getParent()
+    {
+        return new static($this->node->parentNode) ?: null;
     }
 
     /**
@@ -70,7 +90,7 @@ class Element implements ElementInterface
             }
         }
 
-        return $element;
+        return new static($element);
     }
 
     /**
@@ -79,11 +99,13 @@ class Element implements ElementInterface
      * @param $node
      * @return DOMNode|bool
      */
-    public function replaceWith($node)
+    public function replaceWith(ElementInterface $element)
     {
         if ($this->node->parentNode !== null) {
-            return $this->node->parentNode->replaceChild($node,
-                $this->node);
+            return $this->node->parentNode->replaceChild(
+                $element->getNode(),
+                $this->getNode()
+            );
         }
 
         return false;
