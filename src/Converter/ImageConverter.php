@@ -17,10 +17,12 @@ class ImageConverter implements ConverterInterface
         $ampImg = $element->createWritableElement('amp-img');
 
         foreach ($this->validAttributes as $attribute) {
-            $ampImg->setAttribute(
-                $attribute,
-                $element->getAttribute($attribute)
-            );
+            if ($element->getAttribute($attribute)) {
+                $ampImg->setAttribute(
+                    $attribute,
+                    $element->getAttribute($attribute)
+                );
+            }
         }
 
         return $element->replaceWith($ampImg);
