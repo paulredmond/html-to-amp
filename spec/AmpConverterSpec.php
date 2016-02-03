@@ -29,4 +29,25 @@ class AmpConverterSpec extends ObjectBehavior
             '<p>Aut blanditiis exercitationem in, incidunt odit optio.</p>'
         ]));
     }
+
+    function it_should_remove_prohibited_tags()
+    {
+        $convert = [
+            '<base href="http://example.com/dir/" />',
+            '<meta http-equiv="Content-Language" content="en">',
+            '<form>',
+            '<select name="option"><option value="1">Option 1</option></select>',
+            '<textarea name="description">Foo</textarea>',
+            '<input type="submit" value="Push Me">',
+            '</form>',
+            '<p>Hello World</p>',
+            '<object width="400" height="400" data="foo.swf">',
+            '<param name="foo" value="bar"></object>',
+            '</object>',
+            '<script src="itsatrap.js"></script>',
+            '<embed src="foo.swf" />',
+        ];
+
+        $this->convert(implode("\n", $convert))->shouldReturn('<p>Hello World</p>');
+    }
 }
