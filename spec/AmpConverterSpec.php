@@ -41,7 +41,8 @@ class AmpConverterSpec extends ObjectBehavior
             '<textarea name="description">Foo</textarea>',
             '<input type="submit" value="Push Me">',
             '</form>',
-            '<p>Hello World</p>',
+            '<p>Hello World <a href="http://example.com">Example</a></p>',
+            '<a href="javascript:alert(\'foo\')">Alert Foo</a>',
             '<object width="400" height="400" data="foo.swf">',
             '<param name="foo" value="bar"></object>',
             '</object>',
@@ -49,6 +50,11 @@ class AmpConverterSpec extends ObjectBehavior
             '<embed src="foo.swf" />',
         ];
 
-        $this->convert(implode("\n", $convert))->shouldReturn('<meta name="foo" content="bar" /><p>Hello World</p>');
+        $this
+            ->convert(implode("\n", $convert))
+            ->shouldReturn(implode("\n", [
+                '<meta name="foo" content="bar">',
+                '<p>Hello World <a href="http://example.com">Example</a></p>'
+            ]));
     }
 }

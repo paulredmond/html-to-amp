@@ -32,7 +32,6 @@ class AmpConverter
         $root = new Element($root);
         $this->convertChildren($root);
         $this->removeProhibited($document);
-
         $ampHtml = $this->sanitize($document->saveHTML());
 
         return $ampHtml;
@@ -109,8 +108,22 @@ class AmpConverter
 
         /** @var \DOMElement $element */
         foreach ($elements as $element) {
+            if ($element->nodeName === 'meta' && $element->getAttribute('http-equiv') === '') {
+                continue;
+            }
+
             if ($element->parentNode !== null) {
                 $element->parentNode->removeChild($element);
+            }
+        }
+
+        // Remove anchors with javascript in the href
+        $anchors = (new \DOMXPath($document))
+            ->query('//a[contains(@href, "javascript:")]');
+
+        foreach ($anchors as $a) {
+            if ($a->parentNode !== null) {
+                $a->parentNode->removeChild($a);
             }
         }
     }
