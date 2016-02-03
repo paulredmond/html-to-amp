@@ -35,6 +35,7 @@ class AmpConverterSpec extends ObjectBehavior
         $convert = [
             '<base href="http://example.com/dir/" />',
             '<meta http-equiv="Content-Language" content="en">',
+            '<meta name="foo" content="bar" />',
             '<form>',
             '<select name="option"><option value="1">Option 1</option></select>',
             '<textarea name="description">Foo</textarea>',
@@ -48,6 +49,6 @@ class AmpConverterSpec extends ObjectBehavior
             '<embed src="foo.swf" />',
         ];
 
-        $this->convert(implode("\n", $convert))->shouldReturn('<p>Hello World</p>');
+        $this->convert(implode("\n", $convert))->shouldReturn('<meta name="foo" content="bar" /><p>Hello World</p>');
     }
 }
