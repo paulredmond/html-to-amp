@@ -51,6 +51,7 @@ class CloudinaryImageConverter implements ConverterInterface
             $ampImg->setAttribute('layout', 'responsive');
             $ampImg->setAttribute('alt', $element->getAttribute('alt'));
             $ampImg->setAttribute('attribution', $element->getAttribute('attribution'));
+            $ampImg->setAttribute('class', 'amp-img');
             $element->replaceWith($ampImg);
 
             $event->stopPropagation();

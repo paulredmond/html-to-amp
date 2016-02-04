@@ -80,6 +80,17 @@ class Element implements ElementInterface
         return $this->node->hasChildNodes();
     }
 
+    /**
+     * Append an Element as a child of the current element
+     *
+     * @param  Element $element The element to append as a child
+     * @return null
+     */
+    public function appendChild(Element $element)
+    {
+        $this->getNode()->appendChild($element->getNode());
+    }
+
     public function createWritableElement($elementName, array $attributes = [])
     {
         $element = $this->node->ownerDocument->createElement($elementName);
