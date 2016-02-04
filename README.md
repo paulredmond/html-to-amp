@@ -22,6 +22,8 @@ The library's **main purpose is parsing fragments of HTML content (an article bo
  
 ### Testing
  
+![Build Status](https://travis-ci.org/paulredmond/html-to-amp.svg?branch=master)
+
  ```
  $ vendor/bin/phpspec run
  ```
