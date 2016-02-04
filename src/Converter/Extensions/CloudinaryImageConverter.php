@@ -74,26 +74,19 @@ class CloudinaryImageConverter implements ConverterInterface
     {
         return implode(', ', [
             cloudinary_url($src, [
-                'width' => 620,
+                'width' => 700,
                 'crop' => 'limit',
                 'sign_url' => true,
                 'type' => 'fetch',
                 'effect' => 'sharpen'
-            ]) . ' 620w',
+            ]) . ' 700w',
             cloudinary_url($src, [
-                'width' => 605,
+                'width' => 465,
                 'crop' => 'limit',
                 'sign_url' => true,
                 'type' => 'fetch',
                 'effect' => 'sharpen'
-            ]) . ' 605w',
-            cloudinary_url($src, [
-                'width' => 375,
-                'crop' => 'limit',
-                'sign_url' => true,
-                'type' => 'fetch',
-                'effect' => 'sharpen'
-            ]) . ' 375w',
+            ]) . ' 465w',
         ]);
     }
 
@@ -105,9 +98,8 @@ class CloudinaryImageConverter implements ConverterInterface
     private function generateSizes()
     {
         return implode(', ', [
-            '(min-width: 660px) 620px',
-            '(min-width: 480px) 605px',
-            '375px'
+            '(min-width: 600px) 600px',
+            '100vw'
         ]);
     }
 }
