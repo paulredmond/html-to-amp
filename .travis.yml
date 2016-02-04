@@ -5,10 +5,8 @@ php:
   - '5.6'
   - '7.0'
 
-before_script:
-  - composer self-update -n
-
 install:
+  - composer self-update -n
   - composer install --prefer-source --no-interaction
 
 script: vendor/bin/phpspec run -v
