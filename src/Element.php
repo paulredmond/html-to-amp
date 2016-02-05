@@ -122,6 +122,11 @@ class Element implements ElementInterface
         return false;
     }
 
+    /**
+     * Remove this element from the referenced DOMDocument
+     *
+     * @return mixed
+     */
     public function remove()
     {
         if ($this->node->parentNode) {
