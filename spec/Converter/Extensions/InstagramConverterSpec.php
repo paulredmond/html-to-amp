@@ -53,9 +53,20 @@ class InstagramConverterSpec extends ObjectBehavior
 
     public function it_returns_amp_instagram(ElementInterface $element) 
     {
+        $prophet = new Prophet();
+        $newElement = $prophet->prophesize('Predmond\HtmlToAmp\Element');
+
+        $attrs = [
+            'layout' => "responsive",
+            'width' => 600,
+            'height' => 384,
+            'data-shortcode' => 'BBB-bbb'
+        ];
+
         $code = 'BBB-bbb';
-        
-        $this->getAmpInstagram($element, $code)->shouldReturnAnInstanceOf(\DOMElement::class);
+
+        $element->createWritableElement('amp-instagram', $attrs)->willReturn($newElement);
+        $this->getAmpInstagram($element, $code)->shouldReturnAnInstanceOf(\Predmond\HtmlToAmp\Element::class);
     }
 
     public function it_replaces_element_class_instagram_with_amp(
