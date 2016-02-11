@@ -3,6 +3,10 @@ A PHP Library to Convert HTML to [AMP HTML](https://www.ampproject.org/)
 
 **This is a new library and not considered stable yet.**
 
+### Documentation
+
+See the [wiki](https://github.com/paulredmond/html-to-amp/wiki). Documentation is a WIP right now.
+
 ### Why?
 
 I have a need to convert HTML content into valid AMP (a subset of HTML) format from disparate CMS systems in a (hopefully) somewhat consistent manner. Instead of hacking regular expressions and doing the same thing over and over again, I thought it would be useful to create a library to parse HTML and convert it into AMP HTML.
