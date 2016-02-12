@@ -18,17 +18,19 @@ class InstagramConverterSpec extends ObjectBehavior
         $this->shouldHaveType('Predmond\HtmlToAmp\Converter\ConverterInterface');
     }
 
-    public function it_has_subscribed_events()
+    public function it_should_be_converted(ElementInterface $element)
     {
-        $this->getSubscribedEvents()->shouldReturn([
-            'blockquote' => ['handleInstagram']
-        ]);
+        $element->hasChildren()->willReturn(true);
+        $element->getAttribute('class')->willReturn('instagram-media or more');
+        $element->getAttributes()->willReturn(['data-instgrm-version']);
+        $this->convertToAmp($element)->shouldReturn(true);
     }
 
-    public function it_has_instagram(ElementInterface $element)
+    public function it_should_not_be_converted(ElementInterface $element)
     {
-        $element->getAttribute('class')->willReturn('instagram-media or more');
-        $this->hasInstagram($element)->shouldReturn(true);
+        $element->hasChildren()->willReturn(false);
+        $element->getAttribute('class')->willReturn('some class');
+        $this->convertToAmp($element)->shouldReturn(false);
     }
 
     public function it_finds_the_instagram_code(ElementInterface $element)
@@ -48,25 +50,7 @@ class InstagramConverterSpec extends ObjectBehavior
         $element->getAttribute('href')->willReturn('');
         $element->getChildren()->willReturn([ $parent]);
 
-        $this->findTheCode($element)->shouldBe('AAA-aaa');
-    }
-
-    public function it_returns_amp_instagram(ElementInterface $element) 
-    {
-        $prophet = new Prophet();
-        $newElement = $prophet->prophesize('Predmond\HtmlToAmp\Element');
-
-        $attrs = [
-            'layout' => "responsive",
-            'width' => 600,
-            'height' => 384,
-            'data-shortcode' => 'BBB-bbb'
-        ];
-
-        $code = 'BBB-bbb';
-
-        $element->createWritableElement('amp-instagram', $attrs)->willReturn($newElement);
-        $this->getAmpInstagram($element, $code)->shouldReturnAnInstanceOf(\Predmond\HtmlToAmp\Element::class);
+        $this->getEmbedShortcode($element)->shouldBe('AAA-aaa');
     }
 
     public function it_replaces_element_class_instagram_with_amp(
@@ -76,4 +60,10 @@ class InstagramConverterSpec extends ObjectBehavior
         $this->handleInstagram($event, $element);
     }
 
+    public function it_has_subscribed_events()
+    {
+        $this->getSubscribedEvents()->shouldReturn([
+            'blockquote' => ['handleInstagram']
+        ]);
+    }
 }

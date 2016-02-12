@@ -8,24 +8,29 @@ use Predmond\HtmlToAmp\Converter\ConverterInterface;
 
 class InstagramConverter implements ConverterInterface
 {
-    public function hasInstagram(ElementInterface $element)
+    public function convertToAmp(ElementInterface $element)
     {
-        $classes = explode(' ', $element->getAttribute('class'));
-        return in_array('instagram-media', $classes);
+        if ($element->hasChildren() == false) {
+            return false;
+        }
+
+        $hasClass = in_array('instagram-media', explode(' ', $element->getAttribute('class')));
+        $hasAttr = array_key_exists('data-instgrm-version', $element->getAttributes());
+
+        return $hasClass || $hasAttr;
     }
 
-    public function findTheCode($element) 
+    public function getEmbedShortcode($element) 
     {
         $href = $element->getAttribute('href');
         if ($href != '') {
-            $parts = explode('/', $href);
-            if (in_array('www.instagram.com', $parts)) {
-                return $parts[count($parts)-2];
+            if (1 === preg_match('/(?:instagr\.am|instagram\.com)\/p\/([^\/]+)\/?$/i', $href, $matches)) {
+                    return $matches[1];
             }
         } 
 
         foreach($element->getChildren() as $child) {
-            $shortcode = $this->findTheCode($child);
+            $shortcode = $this->getEmbedShortcode($child);
             if ($shortcode !== null) {
                 return $shortcode;
             }
@@ -35,7 +40,18 @@ class InstagramConverter implements ConverterInterface
                 
     }
 
-    public function getAmpInstagram(ElementInterface $element, $shortcode) {
+    public function handleInstagram( EventInterface $event, ElementInterface $element) {
+
+        if ($this->convertToAmp($element) == false) {
+            return;
+        }
+
+        $shortcode = $this->getEmbedShortcode($element);
+
+        if ($shortcode == null) {
+            return;
+        }
+
         $attrs = [
             'layout' => "responsive",
             'width' => 600,
@@ -43,22 +59,8 @@ class InstagramConverter implements ConverterInterface
             'data-shortcode' => $shortcode
         ];
 
-        return $element->createWritableElement('amp-instagram', $attrs);
-    }
-
-    public function handleInstagram( EventInterface $event, ElementInterface $element) {
-
-        if ($this->hasInstagram($element) == false) {
-            return;
-        }
-
-        if ($element->hasChildren() == false) {
-            return;
-        }
-
+        $element->replaceWith($element->createWritableElement('amp-instagram', $attrs));
         $event->stopPropagation();
-        $shortcode = $this->findTheCode($element);
-        $element->replaceWith($this->getAmpInstagram($element, $shortcode));
     }
 
     /**
