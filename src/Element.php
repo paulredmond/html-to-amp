@@ -143,9 +143,11 @@ class Element implements ElementInterface
     {
         $children = [];
 
-        /** @var \DOMNode $node */
-        foreach ($this->node->childNodes as $node) {
-            $children[] = new static($node);
+        if ($this->node->childNodes->length > 0) {
+            /** @var \DOMNode $node */
+            foreach ($this->node->childNodes as $node) {
+                $children[] = new static($node);
+            }
         }
 
         return $children;
