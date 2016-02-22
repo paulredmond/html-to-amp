@@ -67,7 +67,7 @@ interface ElementInterface
      *
      * @param  string $elementName the name of the node
      * @param  array  $attributes  optional node attributes
-     * @return \DOMElement
+     * @return ElementInterface
      */
     public function createWritableElement($elementName, array $attributes = []);
 

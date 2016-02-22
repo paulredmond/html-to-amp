@@ -91,6 +91,11 @@ class Element implements ElementInterface
         $this->getNode()->appendChild($element->getNode());
     }
 
+    /**
+     * @param string $elementName
+     * @param array $attributes
+     * @return static
+     */
     public function createWritableElement($elementName, array $attributes = [])
     {
         $element = $this->node->ownerDocument->createElement($elementName);
