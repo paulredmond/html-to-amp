@@ -46,6 +46,7 @@ class YoutubeConverter implements ConverterInterface
         return $element->createWritableElement('amp-youtube', [
             'data-videoid' => $embedCode,
             'layout' => 'responsive',
+            // 16:9 Ratio
             'width' => '560',
             'height' => '315'
         ]);
