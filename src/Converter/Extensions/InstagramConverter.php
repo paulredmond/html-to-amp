@@ -59,7 +59,11 @@ class InstagramConverter implements ConverterInterface
             'data-shortcode' => $shortcode
         ];
 
-        $element->replaceWith($element->createWritableElement('amp-instagram', $attrs));
+        $container = $element->createWritableElement('div', ['class' => 'instagram-container']);
+        $ampInstagram = $element->createWritableElement('amp-instagram', $attrs);
+        $container->appendChild($ampInstagram);
+
+        $element->replaceWith($container);
         $event->stopPropagation();
     }
 

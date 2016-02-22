@@ -63,6 +63,12 @@ interface ElementInterface
     public function getChildren();
 
     /**
+     * @param ElementInterface $element
+     * @return mixed
+     */
+    public function appendChild(ElementInterface $element);
+
+    /**
      * Create a DOMNode Instance from the DOMDocument
      *
      * @param  string $elementName the name of the node

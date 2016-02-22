@@ -86,7 +86,7 @@ class Element implements ElementInterface
      * @param  Element $element The element to append as a child
      * @return null
      */
-    public function appendChild(Element $element)
+    public function appendChild(ElementInterface $element)
     {
         $this->getNode()->appendChild($element->getNode());
     }

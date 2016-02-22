@@ -14,7 +14,9 @@ class YoutubeConverter implements ConverterInterface
     {
         $src = $element->getAttribute('src');
         if (1 === preg_match('/youtube\.com\/(?:v|embed)\/([a-zA-z0-9_-]+)/i', $src, $match)) {
-            $element->replaceWith($this->createAmpTag($element, $match[1]));
+            $container = $element->createWritableElement('div', ['class' => 'youtube-container']);
+            $container->appendChild($this->createAmpTag($element, $match[1]));
+            $element->replaceWith($container);
             $event->stopPropagation();
         }
     }
@@ -31,7 +33,9 @@ class YoutubeConverter implements ConverterInterface
         }
 
         if ($embedCode !== false) {
-            $element->replaceWith($this->createAmpTag($element, $embedCode));
+            $container = $element->createWritableElement('div', 'youtube-container');
+            $container->appendChild($this->createAmpTag($element, $embedCode));
+            $element->replaceWith($container);
             $event->stopPropagation();
         }
     }
