@@ -32,6 +32,7 @@ class AmpConverter
         $root = new Element($root);
         $this->convertChildren($root);
         $this->removeProhibited($document);
+        $this->removeStyleAttributes($document);
         $ampHtml = $this->sanitize($document->saveHTML());
 
         return $ampHtml;
@@ -125,6 +126,16 @@ class AmpConverter
             if ($a->parentNode !== null) {
                 $a->parentNode->removeChild($a);
             }
+        }
+    }
+
+    private function removeStyleAttributes(\DOMDocument $document)
+    {
+        $elements = (new \DOMXPath($document))->query('//*[@style]');
+
+        /** @var \DOMElement $element */
+        foreach ($elements as $element) {
+            $element->removeAttribute('style');
         }
     }
 }
