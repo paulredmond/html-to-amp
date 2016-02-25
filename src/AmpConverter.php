@@ -102,7 +102,8 @@ class AmpConverter
             'script',
             'select',
             'option',
-            'meta'
+            'meta',
+            'map',
         ]);
 
         $elements = (new \DOMXPath($document))->query($xpath);
