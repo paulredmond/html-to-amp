@@ -24,6 +24,7 @@ class CloudinaryImageConverter implements ConverterInterface
      */
     public function handleTagImg(EventInterface $event, ElementInterface $element)
     {
+
         // Should mutate all images and stop propagation
         if (function_exists('cloudinary_url')) {
             $src = $element->getAttribute('src');
@@ -32,17 +33,28 @@ class CloudinaryImageConverter implements ConverterInterface
             $sizes = $this->generateSizes();
             $srcset = $this->generateSrcset($src);
 
+            $urlConfig = [
+                'width' => 400,
+                'height' => 225,
+                'crop' => 'limit',
+                'sign_url' => true,
+                'type' => 'fetch',
+                'effect' => 'sharpen',
+            ];
+
+            if ($width < 100 || $height < 100) {
+                $width = $urlConfig['width'];
+                $height = $urlConfig['height'];
+            } else {
+                $urlConfig['width'] = $width;
+                $urlConfig['height'] = $height;
+            }
+
             // Create the responsive <amp-img /> tag
             $ampImg = $element->createWritableElement('amp-img');
             $ampImg->setAttribute(
                 'src',
-                cloudinary_url($src, [
-                    'width' => 300,
-                    'crop' => 'limit',
-                    'sign_url' => true,
-                    'type' => 'fetch',
-                    'effect' => 'sharpen',
-                ])
+                cloudinary_url($src, $urlConfig)
             );
             $ampImg->setAttribute('width', $width);
             $ampImg->setAttribute('height', $height);
