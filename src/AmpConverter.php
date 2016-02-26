@@ -165,9 +165,11 @@ class AmpConverter
 
         // Accepted attributes that are not valid on specific elements
         $xpathQueries = [
-            '//table[@border]|//table[@cellpadding]' => ['border', 'cellpadding'],
-            '//td[@width]|//table[@width]' => ['width'],
-            '//ul[@type]|//ul[@compact]' => ['type', 'compact']
+            '//table[@border]|//table[@cellpadding]|//table[@cellspacing]|//table[@width]' => ['border', 'cellpadding', 'cellspacing', 'width'],
+            '//td[@width]|//td[@height]' => ['width', 'height'],
+            '' => ['width'],
+            '//ul|//ol' => ['compact', 'reversed', 'start', 'type'],
+            '//blockquote[@cite]' => ['cite'],
         ];
 
         foreach ($xpathQueries as $query => $attributes) {
