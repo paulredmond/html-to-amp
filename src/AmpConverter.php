@@ -31,8 +31,14 @@ class AmpConverter
 
         $root = new Element($root);
         $this->convertChildren($root);
+
+        $this->environment->getEventEmitter()->emit('after.convert', $document);
+
         $this->removeProhibited($document);
-        $this->removeStyleAttributes($document);
+        $this->removeProhibitedAttributes($document);
+
+        $this->environment->getEventEmitter()->emit('before.sanitize', $document);
+
         $ampHtml = $this->sanitize($document->saveHTML());
 
         return $ampHtml;
@@ -130,13 +136,54 @@ class AmpConverter
         }
     }
 
-    private function removeStyleAttributes(\DOMDocument $document)
+    /**
+     * Removed prohibited attributes
+     *
+     * @param \DOMDocument $document
+     */
+    private function removeProhibitedAttributes(\DOMDocument $document)
     {
-        $elements = (new \DOMXPath($document))->query('//*[@style]');
+        // Globally invalid attributes
+        // @todo more globally invalid attribute research. Does AMP have documentation for this?
+        $invalidAttributes = [
+            'align',
+            'border',
+            'contenteditable',
+            'style',
+        ];
+
+        /**
+         * Example xpath: "//*[@align]|//*[@style]"
+         */
+        $xpath = '//*[@' . implode(']|//*[@', $invalidAttributes) . ']';
+        $elements = (new \DOMXPath($document))->query($xpath);
 
         /** @var \DOMElement $element */
         foreach ($elements as $element) {
-            $element->removeAttribute('style');
+            $this->removeElementAttributes($element, $invalidAttributes);
+        }
+
+        // Accepted attributes that are not valid on specific elements
+        $xpathQueries = [
+            '//table[@border]|//table[@cellpadding]' => ['border', 'cellpadding'],
+            '//td[@width]|//table[@width]' => ['width'],
+            '//ul[@type]|//ul[@compact]' => ['type', 'compact']
+        ];
+
+        foreach ($xpathQueries as $query => $attributes) {
+            $elements = (new \DOMXPath($document))->query($query);
+            foreach ($elements as $element) {
+                $this->removeElementAttributes($element, $attributes);
+            }
+        }
+    }
+
+    private function removeElementAttributes(
+        \DOMElement $node,
+        array $attributes = []
+    ) {
+        foreach ($attributes as $attribute) {
+            $node->removeAttribute($attribute);
         }
     }
 }
