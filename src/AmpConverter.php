@@ -2,6 +2,7 @@
 
 namespace Predmond\HtmlToAmp;
 
+use DOMDocument;
 use Predmond\HtmlToAmp\Converter\ConverterInterface;
 
 class AmpConverter
@@ -51,7 +52,7 @@ class AmpConverter
      */
     private function createDocument($html)
     {
-        $document = new \DOMDocument();
+        $document = new DOMDocument();
 
         libxml_use_internal_errors(true);
         $document->loadHTML('<?xml encoding="UTF-8">' . $html);
@@ -167,7 +168,6 @@ class AmpConverter
         $xpathQueries = [
             '//table[@border]|//table[@cellpadding]|//table[@cellspacing]|//table[@width]' => ['border', 'cellpadding', 'cellspacing', 'width'],
             '//td[@width]|//td[@height]' => ['width', 'height'],
-            '' => ['width'],
             '//ul|//ol' => ['compact', 'reversed', 'start', 'type'],
             '//blockquote[@cite]' => ['cite'],
         ];
