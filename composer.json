@@ -16,6 +16,7 @@
         }
     },
     "require": {
+        "ext-xml": "*",
         "league/event": "^2.1"
     },
     "require-dev": {
