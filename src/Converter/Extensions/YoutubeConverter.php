@@ -33,7 +33,11 @@ class YoutubeConverter implements ConverterInterface
         }
 
         if ($embedCode !== false) {
-            $container = $element->createWritableElement('div', 'youtube-container');
+
+            $container = $element->createWritableElement('div', [
+                'class' => 'youtube-container'
+            ]);
+
             $container->appendChild($this->createAmpTag($element, $embedCode));
             $element->replaceWith($container);
             $event->stopPropagation();
