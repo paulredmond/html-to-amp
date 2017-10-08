@@ -8,7 +8,7 @@ use Predmond\HtmlToAmp\ElementInterface;
 class ImageConverter implements ConverterInterface
 {
     private $validAttributes = [
-        'src', 'width', 'height', 'srcset', 'alt', 'attribution', 'class'
+        'src', 'width', 'height', 'srcset', 'alt', 'attribution', 'class', 'layout'
     ];
 
     public function handleTagImg(EventInterface $event, ElementInterface $element)

@@ -28,6 +28,7 @@ class ImageConverterSpec extends ObjectBehavior
         $ampImg->setAttribute('srcset', '')->shouldNotBeCalled();
         $ampImg->setAttribute('alt', '')->shouldNotBeCalled();
         $ampImg->setAttribute('attribution', '')->shouldNotBeCalled();
+        $ampImg->setAttribute('layout', '')->shouldNotBeCalled();
 
         $element->getAttribute('src')->shouldBeCalled()->willReturn('foo.jpg');
         $element->getAttribute('width')->shouldBeCalled()->willReturn(300);
@@ -36,6 +37,7 @@ class ImageConverterSpec extends ObjectBehavior
         $element->getAttribute('srcset')->shouldBeCalled()->willReturn('');
         $element->getAttribute('alt')->shouldBeCalled()->willReturn('');
         $element->getAttribute('attribution')->shouldBeCalled()->willReturn('');
+        $element->getAttribute('layout')->shouldBeCalled()->willReturn('');
 
         $element
             ->createWritableElement('amp-img')
